@@ -932,7 +932,7 @@
         function scrollToCard(id) {
             const card = document.getElementById('card-' + id);
             if (card) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                card.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
         }
 
@@ -1027,7 +1027,13 @@
             } else {
                 card1c.className = "question-card status-incorrect";
                 fb1c.className = "feedback incorrect";
-                fb1c.innerHTML = "<strong>Incorrecto (0 pts).</strong> Recordá que la entrevista embudo comienza con preguntas amplias/abiertas sobre la situación general y va cerrando hacia datos precisos y cerrados.";
+                fb1c.innerHTML = `<strong>Incorrecto (0 pts).</strong> El orden e intencionalidad de la entrevista embudo correcta es:<br>
+                1. ¿Qué sucede si el usuario ancla...? (Abierta, Ord: 1)<br>
+                2. ¿Cuáles son los motivos por los que se puede aplicar un recargo? (Abierta, Ord: 2)<br>
+                3. ¿Qué información muestra el resumen del viaje...? (Abierta, Ord: 3)<br>
+                4. ¿Qué datos se registran al finalizar un viaje? (Abierta, Ord: 4)<br>
+                5. ¿Cuántas ciudades usan actualmente...? (Cerrada, Ord: 5)<br>
+                6. ¿El usuario puede usar el servicio sin tarjeta...? (Cerrada, Ord: 6)`;
             }
 
             // Preguntas 2 a 21 (20 preguntas teóricas)
@@ -1095,7 +1101,7 @@
                 fb.innerHTML = "";
             });
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
     </script>
 </body>
