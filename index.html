@@ -856,7 +856,7 @@
             <!-- 21 -->
             <div class="question-card" id="card-21">
                 <p class="title">21. Una empresa implementa un sistema que genera reportes completos y sin errores. Sin
-                    embargo, los usuarios no los utilizan porque consideran que contienen demasiada información
+                    embargo, los usuarios não los utilizan porque consideran que contienen demasiada información
                     innecesaria. ¿Cuál es el principal problema?</p>
                 <div class="options-group">
                     <label><input type="radio" name="q21" value="A"> A) Falta de exactitud</label>
@@ -960,25 +960,11 @@
             const card1b = document.getElementById('card-1b');
             const fb1b = document.getElementById('fb-1b');
             let errorAlcance = false;
-            const scopeItems = document.querySelectorAll('.scope-item');
+            const scopeItems = document.querySelectorAll('#card-1b .scope-item');
 
             scopeItems.forEach(item => {
                 const input = item.querySelector('input');
-                const text = item.textContent.trim();
-                const esDelAlcance = [
-                    "Consultar estaciones disponibles",
-                    "Registrar usuario",
-                    "Escanear QR para liberar bicicleta",
-                    "Calcular recargo por devolución fuera de estación habilitada",
-                    "Reservar bicicleta",
-                    "Enviar resumen de viaje al usuario",
-                    "Desbloquear bicicleta con QR",
-                    "Validar si el usuario tiene tarjeta activa",
-                    "Calcular tiempo total del viaje",
-                    "Registrar historial de viajes",
-                    "Validar ubicación de devolución",
-                    "Generar informe mensual con estadísticas"
-                ].includes(text);
+                const esDelAlcance = input.classList.contains('alcance') || input.value === 'ok';
 
                 if (esDelAlcance) {
                     if (input.checked) {
@@ -1005,7 +991,7 @@
             } else {
                 card1b.className = "question-card status-incorrect";
                 fb1b.className = "feedback incorrect";
-                fb1b.innerHTML = "<strong>Incorrecto (0 pts).</strong> Revisá los ítems marcados según el enunciado de BiciYa (excluyendo hardware, mantenimiento y tránsito).";
+                fb1b.innerHTML = "<strong>Incorrecto (0 pts).</strong> Revisa los ítems marcados en rojo (errores o faltantes) y en verde (aciertos).";
             }
 
             // 1.c (Evaluación de 1.c: 6 tipos + 6 órdenes correctos en estructura embudo)
