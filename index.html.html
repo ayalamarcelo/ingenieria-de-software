@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFTS N° 11 - Parcial de Ingeniería de Software (Tema 2)</title>
+    <style>
+        :root {
+            --header-bg: #222222;
+            --container-bg: #ffffff;
+            --border-color: #d1d5db;
+            --text-main: #1f2937;
+            --btn-bg: #374151;
+            --btn-hover: #111827;
+            --btn-retry: #4b5563;
+            --btn-retry-hover: #1f2937;
+            
+            --correct-bg: #f2fcf4;
+            --correct-border: #86efac;
+            --correct-text: #166534;
+            
+            --incorrect-bg: #fff5f5;
+            --incorrect-border: #fca5a5;
+            --incorrect-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header-bar {
+            background-color: var(--header-bg);
+            color: #ffffff;
+            padding: 16px 24px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-bar span {
+            font-size: 0.85rem;
+            font-weight: normal;
+            color: #9ca3af;
+        }
+
+        .wrapper {
+            max-width: 1100px;
+            width: 100%;
+            margin: 25px auto;
+            background: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            display: flex;
+            position: relative;
+        }
+
+        .left-panel {
+            width: 70%;
+            padding: 30px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .right-panel {
+            width: 30%;
+            background: #f9fafb;
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .enunciado-box {
+            background: #f9fafb;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #374151;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: #374151;
+        }
+
+        .enunciado-box h3 {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .section-header {
+            background: #e5e7eb;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #374151;
+            border-left: 4px solid #4b5563;
+            border-radius: 4px;
+            margin: 25px 0 15px 0;
+        }
+
+        .section-header:first-child {
+            margin-top: 0;
+        }
+
+        .question-card {
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            padding: 18px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .question-card p.title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #111827;
+        }
+
+        .options-group label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            line-height: 1.4;
+            color: #4b5563;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.83rem;
+        }
+
+        .scope-item {
+            padding: 6px 8px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            transition: background 0.2s;
+        }
+
+        .scope-item.correct-choice {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: var(--correct-text);
+            font-weight: 600;
+        }
+
+        .scope-item.incorrect-choice {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: var(--incorrect-text);
+            font-weight: 600;
+        }
+
+        table.interview-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.85rem;
+        }
+
+        table.interview-table th, table.interview-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table.interview-table th {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        table.interview-table input[type="number"] {
+            width: 60px;
+            padding: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        table.interview-table select {
+            padding: 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: #fff;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .question-card.status-correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .question-card.status-incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        .feedback.correct {
+            display: block;
+            color: var(--correct-text);
+            border: 1px solid var(--correct-border);
+            background-color: #ffffff;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            color: var(--incorrect-text);
+            border: 1px solid var(--incorrect-border);
+            background-color: #ffffff;
+        }
+
+        .guarani-box {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 18px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .guarani-box h3 {
+            font-size: 0.95rem;
+            color: #1f2937;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .nav-item {
+            background: #f3f4f6;
+            border: 1px solid var(--border-color);
+            color: #374151;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--btn-bg);
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .btn-submit:hover {
+            background: var(--btn-hover);
+        }
+
+        .btn-retry {
+            width: 100%;
+            background: var(--btn-retry);
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s;
+            display: none;
+        }
+
+        .btn-retry:hover {
+            background: var(--btn-retry-hover);
+        }
+
+        .grade-card {
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 6px;
+            background: #f3f4f6;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            display: none;
+        }
+
+        .grade-card.show {
+            display: block;
+        }
+
+        .grade-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #111827;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        IFTS N° 11 - Ingeniería de Software
+        <span>Sistema de Préstamo de Bicicletas (BiciYa - Tema 2)</span>
+    </div>
+
+    <div class="wrapper">
+        
+        <div class="left-panel">
+            
+            <div class="enunciado-box">
+                <h3>Sistema de Préstamo de Bicicletas – BiciYa (Tema 2)</h3>
+                <p>BiciYa es un servicio de préstamo de bicicletas públicas que opera en varias ciudades del país. Los usuarios pueden tomar una bicicleta desde cualquier estación habilitada y devolverla en otra distinta. Para utilizar el servicio, los usuarios deben estar registrados y contar con una tarjeta digital activa.</p>
+                <p style="margin-top: 8px;">Desde la app, el usuario puede consultar estaciones con bicicletas disponibles. Para comenzar el viaje, debe acercarse a una estación, escanear el código QR para reclamar la bicicleta y reservarla por hasta 10 minutos. Una vez retirada, el sistema registra el trayecto y el tiempo de uso. Al finalizar el viaje, el usuario debe escanear el QR de la estación donde vuelve la bicicleta para completar correctamente la operación.</p>
+                <p style="margin-top: 8px;">Luego, el sistema calcula si corresponde aplicar un recargo (por tiempo extra o devolución en estación no habilitada). El usuario recibe una notificación con el resumen del viaje. El sistema no permite controlar el estado y mantenimiento de las bicicletas prestadas, como tampoco las cuestiones referidas al tránsito. Cada mes, el sistema generará un informe con tiempos promedios de alquiler, cantidad de bicis alquiladas, etc., para poder iterar el funcionamiento del sistema.</p>
+            </div>
+
+            <div class="section-header">CONSIGNA 1: Práctica sobre el Enunciado</div>
+
+            <!-- 1.a -->
+            <div class="question-card" id="card-1a">
+                <p class="title">1.a) Indique cuál de las siguientes funcionalidades se define como la "función principal", y para la funcionalidad elegida, seleccione su correspondiente límite:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q1a" value="1"> 1. Gestionar usuario. Y su límite es: Desde que el usuario completa el registro hasta que activa su tarjeta digital.</label>
+                    <label><input type="radio" name="q1a" value="2" id="ans-1a"> 2. Préstamo automatizado de bicicleta. Y su límite es: Desde que el usuario registrado selecciona una estación con al menos una bicicleta disponible, hasta que deja la bicicleta en una estación y recibe el resumen del viaje.</label>
+                    <label><input type="radio" name="q1a" value="3"> 3. Reservar bicicleta. Y su límite es: Desde que selecciona una bicicleta hasta que escanea el QR y la libera.</label>
+                    <label><input type="radio" name="q1a" value="4"> 4. Finalizar el trayecto. Y su límite es: Desde que la bicicleta es anclada en la estación hasta que se registra el tiempo, se calcula el recargo y se envía la notificación.</label>
+                </div>
+                <div class="feedback" id="fb-1a"></div>
+            </div>
+
+            <!-- 1.b -->
+            <div class="question-card" id="card-1b">
+                <p class="title">1.b) De las siguientes funcionalidades, marque las que pertenecen al alcance:</p>
+                <div class="checkbox-grid">
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Consultar estaciones disponibles</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Registrar usuario</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Registrar bicicleta robada</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Escanear QR para liberar bicicleta</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Gestionar estaciones físicas</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Calcular recargo por devolución fuera de estación habilitada</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Gestionar tránsito urbano</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Establecer penalidades por uso indebido</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Reservar bicicleta</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Enviar resumen de viaje al usuario</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Aplicar pago electrónico por recargo</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Desbloquear bicicleta con QR</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Reubicar bicicletas manualmente</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Gestionar reclamos de usuarios</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Validar si el usuario tiene tarjeta activa</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Gestionar mantenimiento físico de bicicletas</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Calcular tiempo total del viaje</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Registrar historial de viajes</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Validar ubicación de devolución</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Comunicar con app de mensajería para notificaciones</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Solicitar atención por inconveniente mecánico</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Integrarse con sistema de cobros</label>
+                    <label class="scope-item"><input type="checkbox" class="alcance" value="ok"> Generar informe mensual con estadísticas</label>
+                    <label class="scope-item"><input type="checkbox" class="no"> Establecer puntos de recarga manual</label>
+                </div>
+                <div class="feedback" id="fb-1b"></div>
+            </div>
+
+            <!-- 1.c -->
+            <div class="question-card" id="card-1c">
+                <p class="title">1.c) Clasifique las siguientes preguntas como abierta o cerrada, e indique el orden (1 al 6) que les daría utilizando una estructura de entrevista embudo con el cliente:</p>
+                <table class="interview-table">
+                    <tr>
+                        <th style="width: 80px; text-align: center;">Nro. Embudo</th>
+                        <th>Pregunta</th>
+                        <th style="width: 140px;">Clasificación</th>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-1" min="1" max="6"></td>
+                        <td>¿El usuario puede usar el servicio sin tarjeta digital activa?</td>
+                        <td>
+                            <select id="tipo-1">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-2" min="1" max="6"></td>
+                        <td>¿Cuáles son los motivos por los que se puede aplicar un recargo?</td>
+                        <td>
+                            <select id="tipo-2">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-3" min="1" max="6"></td>
+                        <td>¿Qué sucede si el usuario ancla la bicicleta fuera de una estación habilitada?</td>
+                        <td>
+                            <select id="tipo-3">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-4" min="1" max="6"></td>
+                        <td>¿Qué información muestra el resumen del viaje enviado al usuario?</td>
+                        <td>
+                            <select id="tipo-4">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-5" min="1" max="6"></td>
+                        <td>¿Qué datos se registran al finalizar un viaje?</td>
+                        <td>
+                            <select id="tipo-5">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center"><input type="number" id="ord-6" min="1" max="6"></td>
+                        <td>¿Cuántas ciudades usan actualmente el sistema BiciYa?</td>
+                        <td>
+                            <select id="tipo-6">
+                                <option value="">Seleccione...</option>
+                                <option value="abierta">Abierta</option>
+                                <option value="cerrada">Cerrada</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <div class="feedback" id="fb-1c"></div>
+            </div>
+
+            <div class="section-header">CONSIGNA 2 a 5: Apunte Design Thinking</div>
+
+            <!-- 2 -->
+            <div class="question-card" id="card-2">
+                <p class="title">2. ¿Por qué se dice que Design Thinking no es un proceso lineal?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q2" value="a"> a. Porque no tiene etapas</label>
+                    <label><input type="radio" name="q2" value="b" id="ans-2"> b. Porque las etapas pueden repetirse o cambiar de orden</label>
+                    <label><input type="radio" name="q2" value="c"> c. Porque solo se aplica en diseño gráfico</label>
+                    <label><input type="radio" name="q2" value="d"> d. Porque es opcional seguirlo</label>
+                </div>
+                <div class="feedback" id="fb-2"></div>
+            </div>
+
+            <!-- 3 -->
+            <div class="question-card" id="card-3">
+                <p class="title">3. ¿Por qué se recomienda que el prototipo sea simple?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q3" value="a"> a. Para terminar más rápido la materia</label>
+                    <label><input type="radio" name="q3" value="b"> b. Porque no importa la calidad</label>
+                    <label><input type="radio" name="q3" value="c" id="ans-3"> c. Para poder probar y modificar fácilmente</label>
+                    <label><input type="radio" name="q3" value="d"> d. Para evitar pensar demasiado</label>
+                </div>
+                <div class="feedback" id="fb-3"></div>
+            </div>
+
+            <!-- 4 -->
+            <div class="question-card" id="card-4">
+                <p class="title">4. ¿Cuál es la principal diferencia con "pensar una idea y hacerla directamente"?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q4" value="a" id="ans-4"> a. Se centra en el usuario y el proceso</label>
+                    <label><input type="radio" name="q4" value="b"> b. Lleva más tiempo</label>
+                    <label><input type="radio" name="q4" value="c"> c. Se programa menos</label>
+                    <label><input type="radio" name="q4" value="d"> d. Es más difícil</label>
+                </div>
+                <div class="feedback" id="fb-4"></div>
+            </div>
+
+            <!-- 5 -->
+            <div class="question-card" id="card-5">
+                <p class="title">5. ¿Qué se busca en la etapa de empatizar?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q5" value="a"> a. Evaluar soluciones</label>
+                    <label><input type="radio" name="q5" value="b" id="ans-5"> b. Conocer al usuario y sus necesidades</label>
+                    <label><input type="radio" name="q5" value="c"> c. Programar el sistema</label>
+                    <label><input type="radio" name="q5" value="d"> d. Elegir herramientas</label>
+                </div>
+                <div class="feedback" id="fb-5"></div>
+            </div>
+
+            <div class="section-header">CONSIGNA 6 a 9: Apunte Pressman</div>
+
+            <!-- 6 -->
+            <div class="question-card" id="card-6">
+                <p class="title">6. Cuando se dice que el software "no se estropea", significa que:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q6" value="A"> A) Nunca falla</label>
+                    <label><input type="radio" name="q6" value="B"> B) No necesita mantenimiento</label>
+                    <label><input type="radio" name="q6" value="C" id="ans-6"> C) Su deterioro está asociado a cambios</label>
+                    <label><input type="radio" name="q6" value="D"> D) Es perfecto desde su creación</label>
+                </div>
+                <div class="feedback" id="fb-6"></div>
+            </div>
+
+            <!-- 7 -->
+            <div class="question-card" id="card-7">
+                <p class="title">7. El atributo eficiencia en el software se refiere a:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q7" value="A"> A) Facilidad de uso</label>
+                    <label><input type="radio" name="q7" value="B" id="ans-7"> B) Uso óptimo de recursos</label>
+                    <label><input type="radio" name="q7" value="C"> C) Ausencia de errores</label>
+                    <label><input type="radio" name="q7" value="D"> D) Capacidad de adaptación</label>
+                </div>
+                <div class="feedback" id="fb-7"></div>
+            </div>
+
+            <!-- 8 -->
+            <div class="question-card" id="card-8">
+                <p class="title">8. Dos sistemas generan siempre los mismos resultados ante los mismos datos, pero uno consume muchos más recursos que el otro. ¿Qué atributo los diferencia?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q8" value="A"> A) Fiabilidad</label>
+                    <label><input type="radio" name="q8" value="B" id="ans-8"> B) Eficiencia</label>
+                    <label><input type="radio" name="q8" value="C"> C) Usabilidad</label>
+                    <label><input type="radio" name="q8" value="D"> D) Mantenibilidad</label>
+                </div>
+                <div class="feedback" id="fb-8"></div>
+            </div>
+
+            <!-- 9 -->
+            <div class="question-card" id="card-9">
+                <p class="title">9. ¿Cuál de las siguientes situaciones representa mejor el enfoque de la ingeniería de software?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q9" value="A"> A) Un programador desarrolla solo un sistema sin planificación</label>
+                    <label><input type="radio" name="q9" value="B" id="ans-9"> B) Un equipo utiliza métodos, herramientas y procesos para desarrollar software</label>
+                    <label><input type="radio" name="q9" value="C"> C) Se escribe código directamente sin análisis previo</label>
+                    <label><input type="radio" name="q9" value="D"> D) Se prioriza la velocidad sobre la calidad</label>
+                </div>
+                <div class="feedback" id="fb-9"></div>
+            </div>
+
+            <div class="section-header">CONSIGNA 10 a 14: Unidad Nro. 2 - Kendall & Kendall</div>
+
+            <!-- 10 -->
+            <div class="question-card" id="card-10">
+                <p class="title">10. El análisis de sistemas tiene como objetivo principal:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q10" value="A"> A) Programar soluciones</label>
+                    <label><input type="radio" name="q10" value="B" id="ans-10"> B) Entender y especificar los requerimientos del sistema</label>
+                    <label><input type="radio" name="q10" value="C"> C) Diseñar interfaces gráficas</label>
+                    <label><input type="radio" name="q10" value="D"> D) Implementar bases de datos</label>
+                </div>
+                <div class="feedback" id="fb-10"></div>
+            </div>
+
+            <!-- 11 -->
+            <div class="question-card" id="card-11">
+                <p class="title">11. Un sistema de información se define como:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q11" value="A"> A) Un conjunto de computadoras</label>
+                    <label><input type="radio" name="q11" value="B"> B) Personas que usan software</label>
+                    <label><input type="radio" name="q11" value="C" id="ans-11"> C) Conjunto de componentes que recolectan, procesan y distribuyen información</label>
+                    <label><input type="radio" name="q11" value="D"> D) Programas de gestión empresarial</label>
+                </div>
+                <div class="feedback" id="fb-11"></div>
+            </div>
+
+            <!-- 12 -->
+            <div class="question-card" id="card-12">
+                <p class="title">12. El enfoque de sistemas implica:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q12" value="A"> A) Analizar partes de manera aislada</label>
+                    <label><input type="radio" name="q12" value="B" id="ans-12"> B) Considerar el sistema como un todo y sus interrelaciones</label>
+                    <label><input type="radio" name="q12" value="C"> C) Enfocarse solo en la tecnología</label>
+                    <label><input type="radio" name="q12" value="D"> D) Ignorar el entorno</label>
+                </div>
+                <div class="feedback" id="fb-12"></div>
+            </div>
+
+            <!-- 13 -->
+            <div class="question-card" id="card-13">
+                <p class="title">13. Durante el desarrollo de un sistema, los usuarios finales no son consultados. ¿Qué problema es más probable que ocurra?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q13" value="A"> A) Exceso de documentación</label>
+                    <label><input type="radio" name="q13" value="B"> B) Bajo rendimiento del hardware</label>
+                    <label><input type="radio" name="q13" value="C" id="ans-13"> C) Falta de adecuación a las necesidades reales</label>
+                    <label><input type="radio" name="q13" value="D"> D) Mayor facilidad de uso</label>
+                </div>
+                <div class="feedback" id="fb-13"></div>
+            </div>
+
+            <!-- 14 -->
+            <div class="question-card" id="card-14">
+                <p class="title">14. Un sistema permite registrar datos correctamente, pero no facilita su consulta ni interpretación. ¿Qué aspecto debería mejorarse?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q14" value="A"> A) Entrada de datos</label>
+                    <label><input type="radio" name="q14" value="B"> B) Procesamiento</label>
+                    <label><input type="radio" name="q14" value="C" id="ans-14"> C) Salida de información</label>
+                    <label><input type="radio" name="q14" value="D"> D) Almacenamiento</label>
+                </div>
+                <div class="feedback" id="fb-14"></div>
+            </div>
+
+            <div class="section-header">CONSIGNA 15 a 18: Unidad Nro. 2 - Dirección y Desarrollo de Proyectos</div>
+
+            <!-- 15 -->
+            <div class="question-card" id="card-15">
+                <p class="title">15. Durante un proyecto, se decide reducir el tiempo de entrega. ¿Qué consecuencia es más probable si no se ajusta nada más?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q15" value="A"> A) No cambia ningún otro factor</label>
+                    <label><input type="radio" name="q15" value="B"> B) Disminuye automáticamente el costo</label>
+                    <label><input type="radio" name="q15" value="C" id="ans-15"> C) Se ve afectado el costo o el alcance</label>
+                    <label><input type="radio" name="q15" value="D"> D) Mejora la calidad</label>
+                </div>
+                <div class="feedback" id="fb-15"></div>
+            </div>
+
+            <!-- 16 -->
+            <div class="question-card" id="card-16">
+                <p class="title">16. Un proyecto se extiende indefinidamente sin una fecha clara de finalización. Esto contradice:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q16" value="A"> A) La singularidad</label>
+                    <label><input type="radio" name="q16" value="B"> B) La orientación a resultados</label>
+                    <label><input type="radio" name="q16" value="C" id="ans-16"> C) La duración limitada</label>
+                    <label><input type="radio" name="q16" value="D"> D) La planificación</label>
+                </div>
+                <div class="feedback" id="fb-16"></div>
+            </div>
+
+            <!-- 17 -->
+            <div class="question-card" id="card-17">
+                <p class="title">17. Durante el desarrollo de un proyecto, se detectan desvíos respecto al plan original. ¿Qué proceso se encarga de analizar y actuar sobre estas diferencias?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q17" value="A"> A) Planificación</label>
+                    <label><input type="radio" name="q17" value="B"> B) Ejecución</label>
+                    <label><input type="radio" name="q17" value="C" id="ans-17"> C) Control</label>
+                    <label><input type="radio" name="q17" value="D"> D) Inicio</label>
+                </div>
+                <div class="feedback" id="fb-17"></div>
+            </div>
+
+            <!-- 18 -->
+            <div class="question-card" id="card-18">
+                <p class="title">18. Un proyecto requiere la coordinación de múltiples tareas que dependen unas de otras. Esto evidencia que:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q18" value="A"> A) Es un proceso simple</label>
+                    <label><input type="radio" name="q18" value="B" id="ans-18"> B) Es un sistema de partes interrelacionadas</label>
+                    <label><input type="radio" name="q18" value="C"> C) No requiere planificación</label>
+                    <label><input type="radio" name="q18" value="D"> D) Es independiente del entorno</label>
+                </div>
+                <div class="feedback" id="fb-18"></div>
+            </div>
+
+            <div class="section-header">CONSIGNA 19 a 21: Unidad Nro. 3 - Introd. a Sistemas</div>
+
+            <!-- 19 -->
+            <div class="question-card" id="card-19">
+                <p class="title">19. Un informe contiene errores numéricos, pero está bien presentado y llega a tiempo. ¿Qué atributo de la información está comprometido?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q19" value="A"> A) Oportunidad</label>
+                    <label><input type="radio" name="q19" value="B"> B) Relevancia</label>
+                    <label><input type="radio" name="q19" value="C" id="ans-19"> C) Exactitud</label>
+                    <label><input type="radio" name="q19" value="D"> D) Disponibilidad</label>
+                </div>
+                <div class="feedback" id="fb-19"></div>
+            </div>
+
+            <!-- 20 -->
+            <div class="question-card" id="card-20">
+                <p class="title">20. Un sistema modifica su comportamiento debido a cambios en el entorno. Esto evidencia:</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q20" value="A"> A) Aislamiento del sistema</label>
+                    <label><input type="radio" name="q20" value="B" id="ans-20"> B) Interacción con el ambiente</label>
+                    <label><input type="radio" name="q20" value="C"> C) Independencia de sus partes</label>
+                    <label><input type="radio" name="q20" value="D"> D) Falta de objetivos</label>
+                </div>
+                <div class="feedback" id="fb-20"></div>
+            </div>
+
+            <!-- 21 -->
+            <div class="question-card" id="card-21">
+                <p class="title">21. Una empresa implementa un sistema que genera reportes completos y sin errores. Sin embargo, los usuarios no los utilizan porque consideran que contienen demasiada información innecesaria. ¿Cuál es el principal problema?</p>
+                <div class="options-group">
+                    <label><input type="radio" name="q21" value="A"> A) Falta de exactitud</label>
+                    <label><input type="radio" name="q21" value="B" id="ans-21"> B) Falta de relevancia</label>
+                    <label><input type="radio" name="q21" value="C"> C) Falta de oportunidad</label>
+                    <label><input type="radio" name="q21" value="D"> D) Falta de procesamiento</label>
+                </div>
+                <div class="feedback" id="fb-21"></div>
+            </div>
+
+        </div>
+
+        <!-- PANEL DERECHO: Sticky / Fijo al scrollear -->
+        <div class="right-panel">
+            <div class="guarani-box">
+                <h3>Navegación</h3>
+                <div class="nav-grid">
+                    <div class="nav-item" onclick="scrollToCard('1a')">1a</div>
+                    <div class="nav-item" onclick="scrollToCard('1b')">1b</div>
+                    <div class="nav-item" onclick="scrollToCard('1c')">1c</div>
+                    <div class="nav-item" onclick="scrollToCard('2')">2</div>
+                    <div class="nav-item" onclick="scrollToCard('3')">3</div>
+                    <div class="nav-item" onclick="scrollToCard('4')">4</div>
+                    <div class="nav-item" onclick="scrollToCard('5')">5</div>
+                    <div class="nav-item" onclick="scrollToCard('6')">6</div>
+                    <div class="nav-item" onclick="scrollToCard('7')">7</div>
+                    <div class="nav-item" onclick="scrollToCard('8')">8</div>
+                    <div class="nav-item" onclick="scrollToCard('9')">9</div>
+                    <div class="nav-item" onclick="scrollToCard('10')">10</div>
+                    <div class="nav-item" onclick="scrollToCard('11')">11</div>
+                    <div class="nav-item" onclick="scrollToCard('12')">12</div>
+                    <div class="nav-item" onclick="scrollToCard('13')">13</div>
+                    <div class="nav-item" onclick="scrollToCard('14')">14</div>
+                    <div class="nav-item" onclick="scrollToCard('15')">15</div>
+                    <div class="nav-item" onclick="scrollToCard('16')">16</div>
+                    <div class="nav-item" onclick="scrollToCard('17')">17</div>
+                    <div class="nav-item" onclick="scrollToCard('18')">18</div>
+                    <div class="nav-item" onclick="scrollToCard('19')">19</div>
+                    <div class="nav-item" onclick="scrollToCard('20')">20</div>
+                    <div class="nav-item" onclick="scrollToCard('21')">21</div>
+                </div>
+
+                <button class="btn-submit" onclick="corregirExamen()">Enviar y Corregir</button>
+                <button class="btn-retry" id="btnRetry" onclick="reiniciarExamen()">Reintentar Examen</button>
+
+                <!-- Tarjeta de Calificación Final -->
+                <div class="grade-card" id="gradeCard">
+                    <p style="font-size: 0.85rem; color: #4b5563; font-weight: 600;">Calificación Final</p>
+                    <div class="grade-number" id="gradeNumber">0.0 / 10</div>
+                    <p id="gradeMessage" style="font-size: 0.8rem; color: #6b7280;"></p>
+                </div>
+
+                <div class="summary-info" style="margin-top: 15px;">
+                    <p><strong>Estado:</strong> En edición</p>
+                    <p>Haz clic en "Enviar y Corregir" para validar tu examen completo basado en los apuntes teóricos.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function scrollToCard(id) {
+            const card = document.getElementById('card-' + id);
+            if(card) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function corregirExamen() {
+            let score = 0;
+            const totalItems = 26; // 1a (1) + 1b (alcance general) + 1c (6 órdenes + 6 tipos = 12) + 2 a 21 (20) -> Ajustado proporcionalmente sobre 26 ítems evaluables o ponderados a 10.
+
+            let earnedPoints = 0;
+            let maxPoints = 26;
+
+            // 1.a (1 punto)
+            const q1a = document.querySelector('input[name="q1a"]:checked');
+            const fb1a = document.getElementById('fb-1a');
+            const card1a = document.getElementById('card-1a');
+            if (q1a && q1a.value === '2') {
+                card1a.className = "question-card status-correct";
+                fb1a.className = "feedback correct";
+                fb1a.innerHTML = "<strong>Correcto (+1 pt).</strong> Es la función operativa central descrita en el enunciado de BiciYa.";
+                earnedPoints++;
+            } else {
+                card1a.className = "question-card status-incorrect";
+                fb1a.className = "feedback incorrect";
+                fb1a.innerHTML = "<strong>Incorrecto (0 pts).</strong> La opción correcta es la número 2 (Préstamo automatizado de bicicleta).";
+            }
+
+            // 1.b Alcance (Se evalúan los 24 ítems en conjunto, vale 1 punto si está perfecto o proporcional)
+            const card1b = document.getElementById('card-1b');
+            const fb1b = document.getElementById('fb-1b');
+            let errorAlcance = false;
+            const scopeItems = document.querySelectorAll('.scope-item');
+            
+            // Las que DEBEN estar marcadas (alcance correcto según el PDF del parcial y apuntes):
+            // - Consultar estaciones disponibles
+            // - Registrar usuario
+            // - Escanear QR para liberar bicicleta
+            // - Calcular recargo por devolución fuera de estación habilitada
+            // - Reservar bicicleta
+            // - Enviar resumen de viaje al usuario
+            // - Desbloquear bicicleta con QR
+            // - Validar si el usuario tiene tarjeta activa
+            // - Calcular tiempo total del viaje
+            // - Registrar historial de viajes
+            // - Validar ubicación de devolución
+            // - Generar informe mensual con estadísticas
+            
+            let correctAlcanceCount = 0;
+            let totalAlcanceItems = scopeItems.length;
+
+            scopeItems.forEach(item => {
+                const input = item.querySelector('input');
+                // Textos que pertenecen al alcance según el enunciado original:
+                const text = item.textContent.trim();
+                const esDelAlcance = [
+                    "Consultar estaciones disponibles",
+                    "Registrar usuario",
+                    "Escanear QR para liberar bicicleta",
+                    "Calcular recargo por devolución fuera de estación habilitada",
+                    "Reservar bicicleta",
+                    "Enviar resumen de viaje al usuario",
+                    "Desbloquear bicicleta con QR",
+                    "Validar si el usuario tiene tarjeta activa",
+                    "Calcular tiempo total del viaje",
+                    "Registrar historial de viajes",
+                    "Validar ubicación de devolución",
+                    "Generar informe mensual con estadísticas"
+                ].includes(text);
+
+                if (esDelAlcance) {
+                    if (input.checked) {
+                        item.className = "scope-item correct-choice";
+                        correctAlcanceCount++;
+                    } else {
+                        item.className = "scope-item incorrect-choice";
+                        errorAlcance = true;
+                    }
+                } else {
+                    if (!input.checked) {
+                        item.className = "scope-item correct-choice";
+                        correctAlcanceCount++;
+                    } else {
+                        item.className = "scope-item incorrect-choice";
+                        errorAlcance = true;
+                    }
+                }
+            });
+
+            if (!errorAlcance) {
+                card1b.className = "question-card status-correct";
+                fb1b.className = "feedback correct";
+                fb1b.innerHTML = "<strong>¡Correcto (+1 pt)!</strong> Delimitaste de forma precisa el alcance funcional del software.";
+                earnedPoints++;
+            } else {
+                card1b.className = "question-card status-incorrect";
+                fb1b.className = "feedback incorrect";
+                fb1b.innerHTML = "<strong>Incorrecto (0 pts).</strong> Revisá los ítems marcados según el enunciado de BiciYa (excluyendo hardware, mantenimiento y tránsito).";
+            }
+
+            // 1.c (Evaluación de 1.c: 6 tipos + 6 órdenes correctos en estructura embudo)
+            const card1c = document.getElementById('card-1c');
+            const fb1c = document.getElementById('fb-1c');
+            
+            // Órdenes correctos según estructura embudo (de preguntas más abiertas/generales a más cerradas/específicas):
+            // P1: ¿El usuario puede usar el servicio sin tarjeta digital activa? -> Cerrada (Orden 6)
+            // P2: ¿Cuáles son los motivos por los que se puede aplicar un recargo? -> Abierta (Orden 2)
+            // P3: ¿Qué sucede si el usuario ancla la bicicleta fuera de una estación habilitada? -> Abierta (Orden 1)
+            // P4: ¿Qué información muestra el resumen del viaje enviado al usuario? -> Abierta (Orden 3)
+            // P5: ¿Qué datos se registran al finalizar un viaje? -> Abierta (Orden 4)
+            // P6: ¿Cuántas ciudades usan actualmente el sistema BiciYa? -> Cerrada (Orden 5)
+            
+            const t1 = document.getElementById('tipo-1').value;
+            const t2 = document.getElementById('tipo-2').value;
+            const t3 = document.getElementById('tipo-3').value;
+            const t4 = document.getElementById('tipo-4').value;
+            const t5 = document.getElementById('tipo-5').value;
+            const t6 = document.getElementById('tipo-6').value;
+
+            const o1 = document.getElementById('ord-1').value;
+            const o2 = document.getElementById('ord-2').value;
+            const o3 = document.getElementById('ord-3').value;
+            const o4 = document.getElementById('ord-4').value;
+            const o5 = document.getElementById('ord-5').value;
+            const o6 = document.getElementById('ord-6').value;
+
+            let c1Correct = (t1 === 'cerrada' && o1 === '6') &&
+                            (t2 === 'abierta' && o2 === '2') &&
+                            (t3 === 'abierta' && o3 === '1') &&
+                            (t4 === 'abierta' && o4 === '3') &&
+                            (t5 === 'abierta' && o5 === '4') &&
+                            (t6 === 'cerrada' && o6 === '5');
+
+            if (c1Correct) {
+                card1c.className = "question-card status-correct";
+                fb1c.className = "feedback correct";
+                fb1c.innerHTML = "<strong>¡Correcto (+2 pts)!</strong> Clasificación de preguntas (abierta/cerrada) y orden de entrevista embudo correctos.";
+                earnedPoints += 2;
+            } else {
+                card1c.className = "question-card status-incorrect";
+                fb1c.className = "feedback incorrect";
+                fb1c.innerHTML = "<strong>Incorrecto (0 pts).</strong> Recordá que la entrevista embudo comienza con preguntas amplias/abiertas sobre la situación general y va cerrando hacia datos precisos y cerrados.";
+            }
+
+            // Preguntas 2 a 21 (20 preguntas teóricas)
+            const questions = ['2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21'];
+            questions.forEach(q => {
+                const card = document.getElementById('card-' + q);
+                const fb = document.getElementById('fb-' + q);
+                const ans = document.getElementById('ans-' + q);
+                const selected = document.querySelector('input[name="q' + q + '"]:checked');
+
+                if (selected && ans && selected.value === ans.value) {
+                    card.className = "question-card status-correct";
+                    fb.className = "feedback correct";
+                    fb.innerHTML = "<strong>Correcto (+1 pt).</strong>";
+                    earnedPoints++;
+                } else {
+                    card.className = "question-card status-incorrect";
+                    fb.className = "feedback incorrect";
+                    if(ans) {
+                        fb.innerHTML = `<strong>Incorrecto (0 pts).</strong><br>La respuesta correcta es: "<strong>${ans.parentElement.textContent.trim()}</strong>".`;
+                    }
+                }
+            });
+
+            // Total de ítems evaluables máximos = 1 + 1 + 2 + 20 = 24 puntos
+            maxPoints = 24;
+            let finalGrade = (earnedPoints / maxPoints) * 10;
+            if(finalGrade < 1) finalGrade = 1;
+
+            const gradeCard = document.getElementById('gradeCard');
+            const gradeNumber = document.getElementById('gradeNumber');
+            const gradeMessage = document.getElementById('gradeMessage');
+            const btnRetry = document.getElementById('btnRetry');
+
+            gradeCard.className = "grade-card show";
+            gradeNumber.textContent = finalGrade.toFixed(1) + " / 10";
+            btnRetry.style.display = "block";
+
+            if (finalGrade >= 6) {
+                gradeMessage.textContent = "¡Aprobado! Excelente manejo de los conceptos de los apuntes.";
+                gradeNumber.style.color = "#166534";
+            } else {
+                gradeMessage.textContent = "Reprobado. ¡Repasá los conceptos teóricos!";
+                gradeNumber.style.color = "#991b1b";
+            }
+        }
+
+        function reiniciarExamen() {
+            document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+            document.querySelectorAll('input[type="number"]').forEach(el => el.value = "");
+            document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+            
+            // Desmarcar todos los checkboxes de 1b al reiniciar
+            document.querySelectorAll('.scope-item').forEach(item => {
+                const input = item.querySelector('input');
+                item.className = "scope-item";
+                input.checked = false;
+            });
+
+            document.getElementById('gradeCard').className = "grade-card";
+            document.getElementById('btnRetry').style.display = "none";
+
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.className = "question-card";
+            });
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.className = "feedback";
+                fb.innerHTML = "";
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
